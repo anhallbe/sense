@@ -210,9 +210,6 @@ module.exports = (function () {
         body: {
           query : query
         }
-        //query: {
-        //  term: JSON.stringify(options.where)
-        //}
       }, function(error, response) {
         if(error) return cb(error);
         cb(null, response.hits.hits);
