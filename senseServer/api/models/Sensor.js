@@ -6,9 +6,15 @@
 */
 
 module.exports = {
-
+  connections: ['elasticsearch'],
   attributes: {
-
+    name: {
+      type: 'string',
+      unique: true,
+      required: true
+    },
+    value: {
+      type: 'integer'
+    }
   }
 };
-
