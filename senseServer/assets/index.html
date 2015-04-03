@@ -3,10 +3,61 @@
 <script type="text/javascript" src="/js/dependencies/sails.io.js"></script>
 <script type="text/javascript" src="/js/app/app.js"></script>
 
-<div ng-app="main" ng-controller="mainController">
-  <ul>
-    <li ng-repeat="sensor in sensors">
-      {{sensor.name}} - {{sensor.value}}
-    </li>
-  </ul>
+<div ng-app="main" ng-controller="mainController" class="container">
+
+  <form class="center form-inline" ng-submit="search()">
+    <div class="form-group">
+      <div class="input-group">
+        <input type="text" class="form-control" id="exampleInputAmount" ng-model="query" placeholder="e.g value > 1 and id:3">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <td><b>name</b></td>
+        <td><b>value</b></td>
+        <td><b>id</b></td>
+        <td><b>time</b></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="sensor in sensors">
+        <td>{{sensor.name}}</td>
+        <td>{{sensor.value}}</td>
+        <td>{{sensor.id}}</td>
+        <td>{{sensor.time | date :'medium'}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <form class="fixed center form-inline" ng-submit="addSensor()">
+    <div class="form-group">
+      <div class="input-group">
+        <label>Create new sensor</label>
+        <input type="text" class="form-control" ng-model="newName" placeholder="Name">
+        <input type="integer" class="form-control" ng-model="newValue" placeholder="Value">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+  </form>
 </div>
+
+<style>
+.container {
+  margin-top: 100px;
+}
+.center {
+    text-align:center;
+}
+
+.center form {
+    display:inline-block;
+}
+.fixed {
+    position: fixed;
+    bottom:0;
+ }
+</style>
