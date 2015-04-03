@@ -239,21 +239,23 @@ module.exports = (function () {
     },
 
     update: function (connection, collection, options, values, cb) {
-      console.log('update');
+      console.log('______update_______');
+      console.log('connection:');
+      console.log(connection);
+      console.log('collection:');
+      console.log(collection);
+      console.log('options');
+      console.log(options);
+      console.log('values');
+      console.log(values);
       ESConnection.update({
-        index: 'sails-es',
-        type: 'string',
-        id: '1',
-        body: {
-          name: 'asd'
-        }
+        index:'sails-es',
+        type: collection,
+        body: values
       }, function(error, response) {
-        console.log("UPDATE");
-        console.log("RESPONSE: " + response);
-        console.log("ERROR: " + error);
-        cb(response);
+        if(error) return cb(error);
+        cb(null, response);
       });
-      return cb();
     },
 
     destroy: function (connection, collection, options, values, cb) {
