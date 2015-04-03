@@ -8,7 +8,7 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
     io.socket.get('/sensor/search?q=' + $scope.query, function(resData, jwres) {
       $scope.sensors = [];
       for(var r in resData) {
-        $scope.sensors.push({name:resData[r]._source.name, value:resData[r]._source.value, id:resData[r]._id});
+        $scope.sensors.push({name:resData[r]._source.name, value:resData[r]._source.value, id:resData[r]._id, time:resData[r]._source.createdAt});
       }
       $scope.$apply();
     });
@@ -16,7 +16,7 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
 
   $scope.addSensor = function() {
 
-  }
+  };
 
   io.socket.on('sensor', function(obj) {
     if(obj.verb === 'created') {
