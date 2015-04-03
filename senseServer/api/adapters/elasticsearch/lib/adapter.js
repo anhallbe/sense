@@ -230,6 +230,7 @@ module.exports = (function () {
       ESConnection.create({
         index:'sails-es',
         type: collection,
+        id: values.id,
         body: values
       }, function(error, response) {
         if(error) return cb(error);
