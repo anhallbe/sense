@@ -271,6 +271,21 @@ module.exports = (function () {
         cb(response);
       });
       return cb();
+    },
+
+    search: function(connection, collection, query, cb) {
+      console.log("SEARCH CALLED");
+      console.log(collection);
+      console.log(query);
+      console.log(JSON.stringify(query));
+
+      ESConnection.search({
+        index: 'sails-es',
+        q: query
+      }, function(error, response) {
+        if(error) return cb(error);
+        cb(null, response.hits.hits);
+      });
     }
 
     /*
