@@ -6,6 +6,7 @@
 package sense.jsense;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -63,7 +64,8 @@ public class SenseClientTest {
     @Test
     public void testPublish() throws Exception {
         System.out.println("PUBLISH__________________________________");
-        SensorPub pub = new HomeTemperatureSensor(10);
+        Random rand = new Random();
+        SensorPub pub = new HomeTemperatureSensor(rand.nextInt(10000));
         String id = client.publish(pub);
         
         assertNotNull(id);
@@ -82,6 +84,7 @@ public class SenseClientTest {
         try {
             id = client.publish(pub);
         } catch (SerializationException ex) {
+            System.out.println("Serialization error in testGet: " + ex);
             Logger.getLogger(SenseClientTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         assertNotNull(id);
@@ -100,9 +103,20 @@ public class SenseClientTest {
     @Test
     public void testSearch() {
         System.out.println("SEARCH__________________________________");
-        List<SensorPub> result = client.search("value:*");
-        for(SensorPub r : result)
-            System.out.println(r);
+        
+        List<String> queries = new ArrayList<>();
+        queries.add("value:(<2000)");
+        queries.add("value:(>2000)");
+        queries.add("value:(>2000) AND value:(<2000)");
+        queries.add("name:(temperatur~ AND home)");
+        queries.add("name:(temperatur~ AND home) AND value:[0 TO 1000]");
+        
+        for(String query : queries) {
+            System.out.println(query);
+            List<SensorPub> result = client.search(query);
+            for(SensorPub r : result)
+                System.out.println(r);
+        }
         System.out.println("/SEARCH_________________________________");
     }
 }

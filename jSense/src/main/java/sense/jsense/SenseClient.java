@@ -8,17 +8,12 @@ package sense.jsense;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
@@ -75,6 +70,11 @@ public class SenseClient {
         return new SensorPub(name, description, valueType, value) {};
     }
     
+    /**
+     * Perform  a Lucene search. For example: "name:temperature* AND value:[20 TO 100]"
+     * @param simpleQuery
+     * @return 
+     */
     public List<SensorPub> search(String simpleQuery) {
         //System.out.println("Searching for " + simpleQuery);
         List<SensorPub> result = new ArrayList();
@@ -84,23 +84,15 @@ public class SenseClient {
                 .setQuery(QueryBuilders.queryStringQuery(simpleQuery))
                 .execute()
                 .actionGet();
-        //System.out.println("Search response: " + response);
+//        System.out.println("Search hits: " + response.getHits());
         for(SearchHit hit : response.getHits().getHits()) {
-            String name = hit.getFields().get(SensorPub.FIELD_NAME).getValue();
-            String description = hit.getFields().get(SensorPub.FIELD_DESCRIPTION).getValue();
-            String valueType = hit.getFields().get(SensorPub.FIELD_VALUE_TYPE).getValue();
-            String value = hit.getFields().get(SensorPub.FIELD_VALUE).getValue();
+            String name = (String) hit.getSource().get(SensorPub.FIELD_NAME);
+            String description = (String) hit.getSource().get(SensorPub.FIELD_DESCRIPTION);
+            String valueType = (String) hit.getSource().get(SensorPub.FIELD_VALUE_TYPE);
+            String value = (String) hit.getSource().get(SensorPub.FIELD_VALUE);
             SensorPub sp = new SensorPub(name, description, valueType, value) {};
             result.add(sp);
         }
         return result;
-    }
-    
-    public static void main(String[] args) {
-        try {
-            new SenseClient();
-        } catch (IOException ex) {
-            Logger.getLogger(SenseClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
