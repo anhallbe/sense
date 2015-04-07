@@ -76,6 +76,12 @@ public abstract class SensorPub {
     public void setValue(String value) {
         this.value = value;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "{name: '" + getName() + "', "
+                +"description: '" + getDescription() + "', "
+                +"valueType: '" + getValueType() + "', "
+                +"value: '" + getValue() + "'}";
+    }
 }

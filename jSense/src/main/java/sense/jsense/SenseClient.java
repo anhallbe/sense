@@ -6,13 +6,21 @@
 package sense.jsense;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
 
 /**
  *
@@ -65,6 +73,27 @@ public class SenseClient {
         String value = (String) response.getSource().get(SensorPub.FIELD_VALUE);
         
         return new SensorPub(name, description, valueType, value) {};
+    }
+    
+    public List<SensorPub> search(String simpleQuery) {
+        //System.out.println("Searching for " + simpleQuery);
+        List<SensorPub> result = new ArrayList();
+        
+        SearchResponse response = client.prepareSearch()
+                .setTypes(TYPE_SENSOR)
+                .setQuery(QueryBuilders.queryStringQuery(simpleQuery))
+                .execute()
+                .actionGet();
+        //System.out.println("Search response: " + response);
+        for(SearchHit hit : response.getHits().getHits()) {
+            String name = hit.getFields().get(SensorPub.FIELD_NAME).getValue();
+            String description = hit.getFields().get(SensorPub.FIELD_DESCRIPTION).getValue();
+            String valueType = hit.getFields().get(SensorPub.FIELD_VALUE_TYPE).getValue();
+            String value = hit.getFields().get(SensorPub.FIELD_VALUE).getValue();
+            SensorPub sp = new SensorPub(name, description, valueType, value) {};
+            result.add(sp);
+        }
+        return result;
     }
     
     public static void main(String[] args) {
