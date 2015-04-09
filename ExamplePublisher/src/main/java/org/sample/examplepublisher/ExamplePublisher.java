@@ -27,7 +27,7 @@ public class ExamplePublisher {
 //                throw new UnsupportedOperationException("onUpdate is not implemented");
 //            }
 //        };
-        service = new SenseService(SenseService.INTERVAL_FAST, false);
+        service = new SenseService("localhost", 9300, SenseService.INTERVAL_FAST, false);
         
         service.start();
         System.out.println("Publishing..");

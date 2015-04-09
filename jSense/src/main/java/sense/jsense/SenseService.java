@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author andreas
  */
-public final class SenseService implements Runnable {
+public class SenseService implements Runnable {
     SenseClient client;
     private long pollInterval;
     private Map<String, UpdateListener> queries;
@@ -27,18 +27,18 @@ public final class SenseService implements Runnable {
     public static long INTERVAL_FAST = 1000;
     public static long INTERVAL_SLOW = 5000;
 
-    public SenseService(long pollInterval, boolean startNow) {
+    public SenseService(String host, int port, long pollInterval, boolean startNow) {
         this.pollInterval = pollInterval;
         queries = new ConcurrentHashMap<>();
         running = false;
         try {
-            client = new SenseClient();
+            client = new SenseClient(host, port);
         } catch (IOException ex) {
             Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         if(startNow)
-            this.start();
+            start();
     }
     
     public void start() {
