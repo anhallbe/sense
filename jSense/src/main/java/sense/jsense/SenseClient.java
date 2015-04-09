@@ -29,16 +29,25 @@ public class SenseClient {
 
     private Client client;
     
-    private final String HOST_DEFAULT = "localhost";
-    private final int PORT_DEFAULT = 9300;
+    private final String host;
+    private final int port;
+    
+    private static final String HOST_DEFAULT = "localhost";
+    private static final int PORT_DEFAULT = 9300;
     
     private final String INDEX_SENSE = "sense";
     private final String TYPE_SENSOR = "sensor";
     
     public SenseClient() throws IOException {
+        this(HOST_DEFAULT, PORT_DEFAULT);
+    }
+    
+    public SenseClient(String host, int port) throws IOException {
+        this.host = host;
+        this.port = port;
         System.out.println("Connecting..");
-        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST_DEFAULT, PORT_DEFAULT));
-        System.out.println("Connected to " + HOST_DEFAULT + ":" + PORT_DEFAULT);    
+        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
+        System.out.println("Connected to " + host + ":" + port);    
         initiateIndex();
     }
     
@@ -113,13 +122,18 @@ public class SenseClient {
                 .execute()
                 .actionGet();
 //        System.out.println("Search hits: " + response.getHits());
-        for(SearchHit hit : response.getHits().getHits()) {
-            String name = (String) hit.getSource().get(SensorPub.FIELD_NAME);
-            String description = (String) hit.getSource().get(SensorPub.FIELD_DESCRIPTION);
-            String valueType = (String) hit.getSource().get(SensorPub.FIELD_VALUE_TYPE);
-            Object value = hit.getSource().get(SensorPub.FIELD_VALUE);
-            SensorPub sp = new SensorPub(name, description, valueType, value) {};
-            result.add(sp);
+        try {
+            for(SearchHit hit : response.getHits().getHits()) {
+                String name = (String) hit.getSource().get(SensorPub.FIELD_NAME);
+                String description = (String) hit.getSource().get(SensorPub.FIELD_DESCRIPTION);
+                String valueType = (String) hit.getSource().get(SensorPub.FIELD_VALUE_TYPE);
+                Object value = hit.getSource().get(SensorPub.FIELD_VALUE);
+                SensorPub sp = new SensorPub(name, description, valueType, value) {};
+                result.add(sp);
+            }
+        } catch(Exception e) {
+            System.err.println("Something went wrong when parsing search results.");
+            e.printStackTrace(System.err);
         }
         return result;
     }

@@ -22,7 +22,7 @@ public class ExampleSubscriber {
     public ExampleSubscriber() {
         service = new SenseService(SenseService.INTERVAL_SLOW, true);
         
-        service.start();
+//        service.start();
         service.subscribe("name:ExampleSensor", new UpdateListener() {
             @Override
             public void onUpdate(SensorPub update) {
