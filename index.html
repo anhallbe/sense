@@ -19,20 +19,43 @@
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="what-is-this" class="anchor" href="#what-is-this" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is this?</h1>
+      <h2>
+<a id="what-is-this" class="anchor" href="#what-is-this" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is this?</h2>
 
-<p>A piece of middleware that lets your toaster notify your phone about how your friend's shoes just realized that correlation sometimes imply causation. It's also a project for my Ubiquitous Computing class.</p>
+<p>A piece of middleware that lets your toaster notify your phone about how your friend's shoes just realized that correlation sometimes imply causation. It's also a project for my Ubuquitous Computing class.</p>
 
-<h1>
-<a id="sense-server" class="anchor" href="#sense-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sense Server</h1>
+<h2>
+<a id="jsense" class="anchor" href="#jsense" aria-hidden="true"><span class="octicon octicon-link"></span></a>jSense</h2>
+
+<p>A Java client library that lets the user send/receive sensor data in a decoupled way. The idea is that sensors/agents can be added to the system without (re-)configuring any of the existing components. Subscriptions are made through Lucene-like search queries.</p>
+
+<h3>
+<a id="example-subscriber" class="anchor" href="#example-subscriber" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example subscriber:</h3>
+
+<div class="highlight highlight-java"><pre>  <span class="pl-smi">SenseService</span> service <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SenseService</span>(<span class="pl-smi">SenseService</span><span class="pl-c1"><span class="pl-k">.</span>INTERVAL_FAST</span>, <span class="pl-c1">false</span>);
+  service<span class="pl-k">.</span>subscribe(<span class="pl-s"><span class="pl-pds">"</span>description:(home AND temperature)<span class="pl-pds">"</span></span>, <span class="pl-k">new</span> <span class="pl-smi">UpdateListener</span>() {
+      <span class="pl-en">onUpdate</span>(<span class="pl-smi">SensorPup</span> <span class="pl-v">update</span>) {
+          print(<span class="pl-s"><span class="pl-pds">"</span>The temperature in my home is <span class="pl-pds">"</span></span> <span class="pl-k">+</span> update<span class="pl-k">.</span>getValue());
+      }
+  });
+  service<span class="pl-k">.</span>start();</pre></div>
+
+<h3>
+<a id="example-publisher" class="anchor" href="#example-publisher" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example publisher:</h3>
+
+<div class="highlight highlight-java"><pre>  <span class="pl-smi">SenseService</span> service <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SenseService</span>();
+  <span class="pl-c">//Get some sensor reading from hardware/software</span>
+  <span class="pl-smi">HomeTemperatureUpdate</span> update <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">HomeTemperatureUpdate</span>( <span class="pl-c">//This class should extend SensorPub</span>
+      <span class="pl-s"><span class="pl-pds">"</span>KitchenTemperature<span class="pl-pds">"</span></span>,       <span class="pl-c">//name</span>
+      <span class="pl-s"><span class="pl-pds">"</span>This gives the temperature of the kitchen in my home for some reason<span class="pl-pds">"</span></span>, <span class="pl-c">//description</span>
+      <span class="pl-smi">SensorPup</span><span class="pl-c1"><span class="pl-k">.</span>INTEGER</span>,          <span class="pl-c">//The type of value (integer, boolean, geoLoc etc..)</span>
+      <span class="pl-c1">100</span>);                       <span class="pl-c">//It's hot in herre</span>
+  service<span class="pl-k">.</span>publish(update);</pre></div>
+
+<h2>
+<a id="sense-server" class="anchor" href="#sense-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sense Server</h2>
 
 <p>A web server built with Node, Sails and ElasticSearch. The server API allows various sensors to publish and/or subscribe to data changes.</p>
-
-<h1>
-<a id="jsense" class="anchor" href="#jsense" aria-hidden="true"><span class="octicon octicon-link"></span></a>jSense</h1>
-
-<p>A Java client library that lets the user send/receive sensor data in a decoupled way. The idea is that sensors/agents can be added to the system without (re-)configuring any of the existing components.</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/anhallbe/sense">Sense</a> is maintained by <a href="https://github.com/anhallbe">anhallbe</a>.</span>
