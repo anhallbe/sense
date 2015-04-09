@@ -7,6 +7,7 @@ package sense.jsense;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -110,6 +111,7 @@ public class SenseClientTest {
         queries.add("value:(>2000) AND value:(<2000)");
         queries.add("name:(temperatur~ AND home)");
         queries.add("name:(temperatur~ AND home) AND value:[0 TO 1000]");
+        queries.add("value:[5000 TO 9000]");
         
         for(String query : queries) {
             System.out.println(query);

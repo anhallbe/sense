@@ -8,7 +8,7 @@ public abstract class SensorPub {
     private String name;
     private String description;
     private String valueType;
-    private String value;
+    private Object value;
     
     public static final String TYPE_STRING = "string";
     public static final String TYPE_DOUBLE = "double";
@@ -21,7 +21,7 @@ public abstract class SensorPub {
     public static final String FIELD_VALUE_TYPE = "valueType";
     public static final String FIELD_VALUE = "value";
 
-    public SensorPub(String name, String description, String valueType, String value) {
+    public SensorPub(String name, String description, String valueType, Object value) {
         this.name = name;
         this.description = description;
         this.valueType = valueType;
@@ -69,7 +69,7 @@ public abstract class SensorPub {
         this.valueType = valueType;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

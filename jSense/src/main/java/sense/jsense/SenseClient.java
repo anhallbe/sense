@@ -8,12 +8,16 @@ package sense.jsense;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
@@ -34,10 +38,32 @@ public class SenseClient {
     public SenseClient() throws IOException {
         System.out.println("Connecting..");
         client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST_DEFAULT, PORT_DEFAULT));
-        System.out.println("Connected to " + HOST_DEFAULT + ":" + PORT_DEFAULT);    }
+        System.out.println("Connected to " + HOST_DEFAULT + ":" + PORT_DEFAULT);    
+        newIndex();
+    }
     
     public void close() {
         client.close();
+    }
+    
+    private void newIndex() throws IOException {
+        IndicesExistsResponse res = client.admin().indices().prepareExists(INDEX_SENSE).execute().actionGet();
+        if(res.isExists())
+            client.admin().indices().prepareDelete(INDEX_SENSE).execute().actionGet();
+        
+        CreateIndexRequestBuilder cirBuilder = client.admin().indices().prepareCreate(INDEX_SENSE);
+        XContentBuilder mappingBuilder = XContentFactory.jsonBuilder()
+                .startObject()
+                    .startObject(TYPE_SENSOR)
+                        .startObject("_timestamp")
+                            .field("enabled", true)
+                        .endObject()
+                    .endObject()
+                .endObject();
+        System.out.println("Mapping: " + mappingBuilder.string());
+        cirBuilder.addMapping(TYPE_SENSOR, mappingBuilder);
+        cirBuilder.execute().actionGet();
+        System.out.println("Index created");
     }
     
     /**
@@ -65,7 +91,7 @@ public class SenseClient {
         String name = (String) response.getSource().get(SensorPub.FIELD_NAME);
         String description = (String) response.getSource().get(SensorPub.FIELD_DESCRIPTION);
         String valueType = (String) response.getSource().get(SensorPub.FIELD_VALUE_TYPE);
-        String value = (String) response.getSource().get(SensorPub.FIELD_VALUE);
+        Object value = response.getSource().get(SensorPub.FIELD_VALUE);
         
         return new SensorPub(name, description, valueType, value) {};
     }
@@ -89,7 +115,7 @@ public class SenseClient {
             String name = (String) hit.getSource().get(SensorPub.FIELD_NAME);
             String description = (String) hit.getSource().get(SensorPub.FIELD_DESCRIPTION);
             String valueType = (String) hit.getSource().get(SensorPub.FIELD_VALUE_TYPE);
-            String value = (String) hit.getSource().get(SensorPub.FIELD_VALUE);
+            Object value = hit.getSource().get(SensorPub.FIELD_VALUE);
             SensorPub sp = new SensorPub(name, description, valueType, value) {};
             result.add(sp);
         }
