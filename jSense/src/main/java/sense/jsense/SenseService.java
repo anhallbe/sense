@@ -6,6 +6,7 @@
 package sense.jsense;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -24,6 +25,7 @@ public abstract class SenseService extends Thread {
     private long pollInterval;
     private Map<UUID, String> queries;
     private Queue<SensorPub> publicationBuffer;
+    private Date lastPollDate;
     
     public static long INTERVAL_FAST = 1000;
     public static long INTERVAL_SLOW = 5000;
@@ -58,6 +60,7 @@ public abstract class SenseService extends Thread {
         while(true) {
             System.out.println("Running...");
             try {
+                lastPollDate = new Date();
                 Thread.sleep(pollInterval);
 
                 //Send publications
@@ -66,7 +69,7 @@ public abstract class SenseService extends Thread {
                 }
 
                 for(UUID id : queries.keySet()) {
-                    String query = queries.get(id);
+                    String query = queries.get(id) + " AND _timestamp:>" + lastPollDate.getTime();  //Only interested in recent updates.
                     List<SensorPub> result = client.search(query);
                     if(!result.isEmpty())
                         onUpdate(result.get(0), id);

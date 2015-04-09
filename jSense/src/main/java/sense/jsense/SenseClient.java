@@ -39,17 +39,19 @@ public class SenseClient {
         System.out.println("Connecting..");
         client = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST_DEFAULT, PORT_DEFAULT));
         System.out.println("Connected to " + HOST_DEFAULT + ":" + PORT_DEFAULT);    
-        newIndex();
+        initiateIndex();
     }
     
     public void close() {
         client.close();
     }
     
-    private void newIndex() throws IOException {
+    private void initiateIndex() throws IOException {
         IndicesExistsResponse res = client.admin().indices().prepareExists(INDEX_SENSE).execute().actionGet();
-        if(res.isExists())
-            client.admin().indices().prepareDelete(INDEX_SENSE).execute().actionGet();
+        if(res.isExists()) {
+            return; //Index exists, no need to create a new one.
+            //client.admin().indices().prepareDelete(INDEX_SENSE).execute().actionGet();
+        }
         
         CreateIndexRequestBuilder cirBuilder = client.admin().indices().prepareCreate(INDEX_SENSE);
         XContentBuilder mappingBuilder = XContentFactory.jsonBuilder()
