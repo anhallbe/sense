@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,67 +17,92 @@ import java.util.logging.Logger;
  *
  * @author andreas
  */
-public abstract class SenseService extends Thread {
+public final class SenseService implements Runnable {
     SenseClient client;
     private long pollInterval;
-    private Map<UUID, String> queries;
-    private Queue<SensorPub> publicationBuffer;
+    private Map<String, UpdateListener> queries;
     private Date lastPollDate;
+    private boolean running;
     
     public static long INTERVAL_FAST = 1000;
     public static long INTERVAL_SLOW = 5000;
 
-    public SenseService(long pollInterval) {
+    public SenseService(long pollInterval, boolean startNow) {
         this.pollInterval = pollInterval;
         queries = new ConcurrentHashMap<>();
-        publicationBuffer = new ConcurrentLinkedQueue<>();
+        running = false;
         try {
             client = new SenseClient();
         } catch (IOException ex) {
             Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if(startNow)
+            this.start();
     }
     
-    public UUID subscribe(String query) {
-        UUID id = UUID.randomUUID();
-        queries.put(id, query);
-        return id;
+    public void start() {
+        System.out.println("Starting SenseService...");
+        if(!running) {
+            running = true;
+            new Thread(this).start();
+            System.out.println("SenseService started");
+        } else {
+            System.out.println("SenseService is already running. Not starting it again...");
+        }
     }
     
-    public void removeSubscription(UUID id) {
-        queries.remove(id);
+    public void stop() {
+        if(running) {
+            System.out.println("Stopping SenseService...");
+            running = false;
+            System.out.println("Stopped service.");
+        } else {
+            System.out.println("The service is not running.");
+        }
     }
     
-    public void publish(SensorPub publication) {
-        publicationBuffer.add(publication);
+    public void subscribe(String query, UpdateListener listener) {
+        queries.put(query, listener);
+    }
+    
+    public void removeSubscription(String query) {
+        queries.remove(query);
+    }
+    
+    public void publish(final SensorPub update) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    client.publish(update);
+                } catch (SerializationException ex) {
+                    Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
     }
 
     @Override
     public void run() {
-        while(true) {
-            System.out.println("Running...");
+        while(running) {
             try {
                 lastPollDate = new Date();
                 Thread.sleep(pollInterval);
+                if(!running)
+                    break;
 
-                //Send publications
-                while(!publicationBuffer.isEmpty()) {
-                    client.publish(publicationBuffer.poll());   //Should do this in bulk
-                }
-
-                for(UUID id : queries.keySet()) {
-                    String query = queries.get(id) + " AND _timestamp:>" + lastPollDate.getTime();  //Only interested in recent updates.
-                    List<SensorPub> result = client.search(query);
+                for(String query : queries.keySet()) {
+                    String queryWithTimestamp = query + " AND _timestamp:>" + lastPollDate.getTime();  //Only interested in recent updates.
+                    List<SensorPub> result = client.search(queryWithTimestamp);
                     if(!result.isEmpty())
-                        onUpdate(result.get(0), id);
+                        queries.get(query).onUpdate(result.get(0));     //TODO: Threading, bulk updates
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SerializationException ex) {
-                Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("Polling stopped");
     }
     
-    public abstract void onUpdate(SensorPub update, UUID id);
 }
