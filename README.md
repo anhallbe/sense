@@ -33,3 +33,12 @@ A Java client library that lets the user send/receive sensor data in a decoupled
 
 ##Sense Server
 A web server built with Node, Sails and ElasticSearch. The server API allows various sensors to publish and/or subscribe to data changes.
+
+##TODO
+| Feature         | Status        |
+| ----------------|:-------------:|
+| Java API        | functional    |
+| Web frontend    | started       |
+| Node API        | not started   |
+| ES-Node adapter | started       |
+| Backend tests   | not started   |
