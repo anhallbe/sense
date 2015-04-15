@@ -1,0 +1,4 @@
+#!/bin/bash
+cd ..
+cd ExamplePublisher
+mvn exec:java -Dexec.mainClass=org.sample.examplepublisher.ExamplePublisher
