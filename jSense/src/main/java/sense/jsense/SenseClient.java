@@ -38,11 +38,11 @@ public class SenseClient {
     private final String INDEX_SENSE = "sense";
     private final String TYPE_SENSOR = "sensor";
     
-    public SenseClient() throws IOException {
+    protected SenseClient() throws IOException {
         this(HOST_DEFAULT, PORT_DEFAULT);
     }
     
-    public SenseClient(String host, int port) throws IOException {
+    protected SenseClient(String host, int port) throws IOException {
         this.host = host;
         this.port = port;
         System.out.println("Connecting..");
@@ -51,7 +51,7 @@ public class SenseClient {
         initiateIndex();
     }
     
-    public void close() {
+    protected void close() {
         client.close();
     }
     
@@ -83,7 +83,7 @@ public class SenseClient {
      * @return the ID of the publication.
      * @throws sense.jsense.SerializationException if sp could not be serialized to JSON.
      */
-    public String publish(SensorPub sp) throws SerializationException {
+    protected String publish(SensorPub sp) throws SerializationException {
         String json = sp.toJSON();
         IndexResponse response = client.prepareIndex(INDEX_SENSE, TYPE_SENSOR)
                 .setSource(json)
@@ -97,7 +97,7 @@ public class SenseClient {
      * @param id
      * @return 
      */
-    public SensorPub get(String id) {
+    protected SensorPub get(String id) {
         GetResponse response = client.prepareGet(INDEX_SENSE, TYPE_SENSOR, id).execute().actionGet();
         String name = (String) response.getSource().get(SensorPub.FIELD_NAME);
         String description = (String) response.getSource().get(SensorPub.FIELD_DESCRIPTION);
@@ -112,7 +112,7 @@ public class SenseClient {
      * @param simpleQuery
      * @return 
      */
-    public List<SensorPub> search(String simpleQuery) {
+    protected List<SensorPub> search(String simpleQuery) {
         //System.out.println("Searching for " + simpleQuery);
         List<SensorPub> result = new ArrayList();
         

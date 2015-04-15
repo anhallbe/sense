@@ -95,8 +95,11 @@ public class SenseService implements Runnable {
                 for(String query : queries.keySet()) {
                     String queryWithTimestamp = query + " AND _timestamp:>" + lastPollDate.getTime();  //Only interested in recent updates.
                     List<SensorPub> result = client.search(queryWithTimestamp);
-                    if(!result.isEmpty())
-                        queries.get(query).onUpdate(result.get(0));     //TODO: Threading, bulk updates
+//                    if(!result.isEmpty())
+//                        queries.get(query).onUpdate(result.get(0));     //TODO: Threading, bulk updates
+                    for(SensorPub res : result) {
+                        queries.get(query).onUpdate(res);
+                    }
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
