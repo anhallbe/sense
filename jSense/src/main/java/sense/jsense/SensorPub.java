@@ -25,7 +25,29 @@ public abstract class SensorPub {
         this.name = name;
         this.description = description;
         this.valueType = valueType;
-        this.value = value;
+        
+        switch(valueType) {
+            case TYPE_INTEGER:
+                if(value instanceof String)
+                    this.value = new Integer((String)value);
+                else
+                    this.value = (Integer) value;
+                break;
+            case TYPE_STRING:
+                this.value = (String) value;
+                break;
+            case TYPE_BOOLEAN:
+                this.value = (Boolean) value;
+                break;
+            case TYPE_DOUBLE:
+                this.value = (Double) value;
+                break;
+            case TYPE_GEOLOC:
+                this.value = (String) value;
+                break;
+            default: 
+                this.value = value;
+        }
     }
     
     public String toJSON() throws SerializationException {
@@ -73,7 +95,7 @@ public abstract class SensorPub {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
