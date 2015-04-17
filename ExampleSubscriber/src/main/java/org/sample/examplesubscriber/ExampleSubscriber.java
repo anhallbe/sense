@@ -20,7 +20,7 @@ public class ExampleSubscriber {
     private SenseService service;
     
     public ExampleSubscriber() {
-        service = new SenseService("localhost", 9300, SenseService.INTERVAL_SLOW, true);
+        service = new SenseService("localhost", 1337, SenseService.INTERVAL_SLOW, true);
         
 //        service.start();
         service.subscribe("name:ExampleSensor", new UpdateListener() {

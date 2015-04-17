@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author andreas
  */
 public class SenseService implements Runnable {
-    SenseClient client;
+    SenseRESTClient client;
     private long pollInterval;
     private Map<String, UpdateListener> queries;
     private Date lastPollDate;
@@ -31,11 +31,11 @@ public class SenseService implements Runnable {
         this.pollInterval = pollInterval;
         queries = new ConcurrentHashMap<>();
         running = false;
-        try {
-            client = new SenseClient(host, port);
-        } catch (IOException ex) {
-            Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+        client = new SenseRESTClient(host, port);
+//        } catch (IOException ex) {
+//            Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         if(startNow)
             start();
@@ -74,11 +74,11 @@ public class SenseService implements Runnable {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    client.publish(update);
-                } catch (SerializationException ex) {
-                    Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+                client.publishNew(update);
+//                } catch (SerializationException ex) {
+//                    Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
         }).start();
     }
@@ -93,7 +93,7 @@ public class SenseService implements Runnable {
                     break;
 
                 for(String query : queries.keySet()) {
-                    String queryWithTimestamp = query + " AND _timestamp:>" + lastPollDate.getTime();  //Only interested in recent updates.
+                    String queryWithTimestamp = query + " AND updatedAt:>" + lastPollDate.getTime();  //Only interested in recent updates.
                     List<SensorPub> result = client.search(queryWithTimestamp);
 //                    if(!result.isEmpty())
 //                        queries.get(query).onUpdate(result.get(0));     //TODO: Threading, bulk updates
