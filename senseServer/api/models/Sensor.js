@@ -25,7 +25,7 @@ module.exports = {
       required: true
     },
     value: {
-      
+      type: 'integer'
     }
   }
 };
