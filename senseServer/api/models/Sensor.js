@@ -17,8 +17,15 @@ module.exports = {
       unique: true,
       required: true
     },
+    description: {
+      type: 'string',
+    },
+    valueType: {
+      type: 'string',
+      required: true
+    },
     value: {
-      type: 'integer'
+      
     }
   }
 };
