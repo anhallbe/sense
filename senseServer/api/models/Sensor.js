@@ -8,8 +8,8 @@
 module.exports = {
   connections: ['elasticsearch'],
   attributes: {
-    id: {
-      type: 'integer',
+    _id: {
+      type: 'string',
       primaryKey: true
     },
     name: {
