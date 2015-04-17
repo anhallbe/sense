@@ -246,12 +246,17 @@ module.exports = (function () {
       console.log(collection);
       console.log('options');
       console.log(options);
+      console.log('id:');
+      console.log(options.where._id);
       console.log('values');
       console.log(values);
       ESConnection.update({
         index:'sense',
         type: collection,
-        body: values
+        id: options.where._id,
+        body: {
+          doc: values
+        }
       }, function(error, response) {
         if(error) return cb(error);
         cb(null, response);
