@@ -155,11 +155,11 @@ module.exports = (function () {
     define: function (connection, collection, definition, cb) {
 			// Add in logic here to create a collection (e.g. CREATE TABLE logic)
       console.log('define');
-      //var exists = ESConnection.indices.exists({index: 'sails-es'});
+      //var exists = ESConnection.indices.exists({index: 'sense'});
       //console.log("Exists:");
       //console.log(exists);
       //if(!exists)
-      ESConnection.indices.create({index:'sails-es'});
+      ESConnection.indices.create({index:'sense'});
       console.log('/define');
       return cb();
     },
@@ -173,7 +173,7 @@ module.exports = (function () {
     drop: function (connection, collection, relations, cb) {
 			// Add in logic here to delete a collection (e.g. DROP TABLE logic)
       console.log('drop');
-      ESConnection.indices.delete({index:'sails-es'});
+      ESConnection.indices.delete({index:'sense'});
 			return cb();
     },
 
@@ -206,7 +206,7 @@ module.exports = (function () {
         query = {match_all: {}};
 
       ESConnection.search({
-        index: 'sails-es',
+        index: 'sense',
         body: {
           query : query
         }
@@ -228,7 +228,7 @@ module.exports = (function () {
       console.log('values');
       console.log(values);
       ESConnection.create({
-        index:'sails-es',
+        index:'sense',
         type: collection,
         id: values.id,
         body: values
@@ -249,7 +249,7 @@ module.exports = (function () {
       console.log('values');
       console.log(values);
       ESConnection.update({
-        index:'sails-es',
+        index:'sense',
         type: collection,
         body: values
       }, function(error, response) {
@@ -261,7 +261,7 @@ module.exports = (function () {
     destroy: function (connection, collection, options, values, cb) {
       console.log('destroy');
       ESConnection.delete({
-        index: 'sails-es',
+        index: 'sense',
         type: 'string',
         id: '1'
       }, function(error, response) {
@@ -280,7 +280,7 @@ module.exports = (function () {
       console.log(JSON.stringify(query));
 
       ESConnection.search({
-        index: 'sails-es',
+        index: 'sense',
         q: query
       }, function(error, response) {
         if(error) return cb(error);
