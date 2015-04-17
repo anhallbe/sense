@@ -18,6 +18,7 @@
     <thead>
       <tr>
         <td><b>name</b></td>
+        <td><b>description</b></td>
         <td><b>value</b></td>
         <td><b>id</b></td>
         <td><b>time</b></td>
@@ -26,7 +27,8 @@
     <tbody>
       <tr ng-repeat="sensor in sensors">
         <td>{{sensor.name}}</td>
-        <td>{{sensor.value}}</td>
+        <td>{{sensor.description}}</td>
+        <td>{{sensor.value}} ({{sensor.valueType}})</td>
         <td>{{sensor.id}}</td>
         <td>{{sensor.time | date :'medium'}}</td>
       </tr>
@@ -38,6 +40,8 @@
       <div class="input-group">
         <label>Create new sensor</label>
         <input type="text" class="form-control" ng-model="newName" placeholder="Name">
+        <input type="text" class="form-control" ng-model="newDescription" placeholder="Description">
+        <input type="text" class="form-control" ng-model="newValueType" placeholder="Value type">
         <input type="integer" class="form-control" ng-model="newValue" placeholder="Value">
       </div>
     </div>

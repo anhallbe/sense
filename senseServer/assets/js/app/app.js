@@ -8,7 +8,13 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
     io.socket.get('/sensor/search?q=' + $scope.query, function(resData, jwres) {
       $scope.sensors = [];
       for(var r in resData) {
-        $scope.sensors.push({name:resData[r]._source.name, value:resData[r]._source.value, id:resData[r]._id, time:resData[r]._source.createdAt});
+        $scope.sensors.push({
+          name:resData[r]._source.name,
+          description:resData[r]._source.description,
+          valueType:resData[r]._source.valueType,
+          value:resData[r]._source.value,
+          id:resData[r]._id,
+          time:resData[r]._source.updatedAt});
       }
       $scope.$apply();
     });
@@ -28,7 +34,13 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
   io.socket.get('/sensor', function(resData, jwres) {
     $log.info(resData);
     for(var r in resData) {
-      $scope.sensors.push({name:resData[r]._source.name, value:resData[r]._source.value, id:resData[r]._id, time:resData[r]._source.createdAt});
+      $scope.sensors.push({
+        name:resData[r]._source.name,
+        description:resData[r]._source.description,
+        valueType:resData[r]._source.valueType,
+        value:resData[r]._source.value,
+        id:resData[r]._id,
+        time:resData[r]._source.updatedAt});
     }
     $scope.$apply();
   });
