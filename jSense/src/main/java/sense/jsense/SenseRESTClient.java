@@ -9,8 +9,11 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -92,5 +95,35 @@ public class SenseRESTClient {
             Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rCode == 200;
+    }
+    
+    protected List<SensorPub> search(String query) {
+        List<SensorPub> result = new ArrayList<>();
+        try {
+            HttpResponse<JsonNode> response = Unirest.get(sensorURL + "/search")
+                    .header("accept", "application/json")
+                    .queryString("q", query)
+                    .asJson();
+            
+            if(response.getBody().isArray()) {
+                System.out.println("Response body is array.");
+                JSONArray resultArray = response.getBody().getArray();
+                for(int i=0; i<resultArray.length(); i++) {
+                    JSONObject jsonResult = resultArray.getJSONObject(i).getJSONObject("_source");
+                    System.out.println(jsonResult);
+                    String name = jsonResult.getString(SensorPub.FIELD_NAME);
+                    String description = jsonResult.getString(SensorPub.FIELD_DESCRIPTION);
+                    String valueType = jsonResult.getString(SensorPub.FIELD_VALUE_TYPE);
+                    Object value = jsonResult.get(SensorPub.FIELD_VALUE);
+                    result.add(new SensorPub(name, description, valueType, value) {});
+                }
+            }
+            else
+                System.out.println("Response NOT array");
+        } catch (UnirestException ex) {
+            Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
     }
 }

@@ -5,6 +5,7 @@
  */
 package sense.jsense;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -97,5 +98,24 @@ public class SenseRESTClientTest {
         assertEquals(res.getValueType(), sp.getValueType());
         assertEquals(res.getValue(), sp.getValue());
         assertEquals(res.getDescription(), sp.getDescription());
+    }
+    
+    /**
+     * Test of get method, of class SenseRESTClient.
+     */
+    @Test
+    public void testSearch() {
+        System.out.println("search");
+        SensorPub sp = new HomeTemperatureSensor(9000);
+        String id = client.publishNew(sp);
+        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SenseRESTClientTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        List<SensorPub> searchResult = client.search("value:9000 AND name:home");
+        assertTrue(searchResult.size() >= 1);
     }
 }
