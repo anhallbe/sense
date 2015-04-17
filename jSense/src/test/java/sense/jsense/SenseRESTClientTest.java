@@ -5,6 +5,7 @@
  */
 package sense.jsense;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,6 +107,7 @@ public class SenseRESTClientTest {
     @Test
     public void testSearch() {
         System.out.println("search");
+        Date then = new Date();
         SensorPub sp = new HomeTemperatureSensor(9000);
         String id = client.publishNew(sp);
         
@@ -117,5 +119,9 @@ public class SenseRESTClientTest {
         
         List<SensorPub> searchResult = client.search("value:9000 AND name:home");
         assertTrue(searchResult.size() >= 1);
+        
+        Date now = new Date();
+        List<SensorPub> sr2 = client.search("updatedAt:>" + now.getTime());
+        assertTrue(sr2.isEmpty());
     }
 }
