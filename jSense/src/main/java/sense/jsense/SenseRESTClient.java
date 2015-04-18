@@ -17,7 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * This class is used to communicate with the Sense server, using its REST API.
+ * It can be used to add/remove/find sensor records.
  * @author andreas
  */
 public class SenseRESTClient {
@@ -30,6 +31,11 @@ public class SenseRESTClient {
     public static final String HOST_DEFAULT = "localhost";
     public static final int PORT_DEFAULT = 1337;
     
+    /**
+     * Initialize the client to communicate with a server at http://host:port
+     * @param host
+     * @param port 
+     */
     protected SenseRESTClient(String host, int port) {
         this.host = host;
         this.port = port;
@@ -37,10 +43,18 @@ public class SenseRESTClient {
         this.sensorURL = "http://" + host + ":" + port + "/sensor";
     }
     
+    /**
+     * Use the default HOST and PORT. I.e http://localhost:1337/
+     */
     protected SenseRESTClient() {
         this(HOST_DEFAULT, PORT_DEFAULT);
     }
     
+    /**
+     * Get a sensor update with the given ID. Returns null if no sensor is found.
+     * @param id
+     * @return 
+     */
     protected SensorPub get(String id) {
         SensorPub result;
         try {
@@ -62,6 +76,12 @@ public class SenseRESTClient {
         return result;
     }
     
+    /**
+     * Publish a new sensor update. This method should only be used to create
+     * new records. If you want to update an existing resource use publishUpdate.
+     * @param sp
+     * @return 
+     */
     protected String publishNew(SensorPub sp) {
         String id = null;
         try {
@@ -81,6 +101,12 @@ public class SenseRESTClient {
         return id;
     }
     
+    /**
+     * Update the value of an existing sensor.
+     * @param value
+     * @param id
+     * @return 
+     */
     protected boolean publishUpdate(Object value, String id) {
         int rCode = 0;
         try {
@@ -97,6 +123,12 @@ public class SenseRESTClient {
         return rCode == 200;
     }
     
+    /**
+     * Perform a search for a set of sensors. Example: search("name:NameOfSensor AND value:>20").
+     * Returns a list of results, or empty list if no results were found.
+     * @param query
+     * @return 
+     */
     protected List<SensorPub> search(String query) {
         List<SensorPub> result = new ArrayList<>();
         try {

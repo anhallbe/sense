@@ -41,6 +41,9 @@ public class SenseService implements Runnable {
             start();
     }
     
+    /**
+     * Start the (polling) service in a new thread.
+     */
     public void start() {
         System.out.println("Starting SenseService...");
         if(!running) {
@@ -52,6 +55,9 @@ public class SenseService implements Runnable {
         }
     }
     
+    /**
+     * Kill the service.
+     */
     public void stop() {
         if(running) {
             System.out.println("Stopping SenseService...");
@@ -62,6 +68,12 @@ public class SenseService implements Runnable {
         }
     }
     
+    /**
+     * Subscribe to a topic, for instance: 'name:NameOfSensor AND value:[10 TO 20]'.
+     * A callback will be made to the provided listener.
+     * @param query
+     * @param listener 
+     */
     public void subscribe(String query, UpdateListener listener) {
         queries.put(query, listener);
     }
@@ -70,15 +82,15 @@ public class SenseService implements Runnable {
         queries.remove(query);
     }
     
+    /**
+     * Publish a sensor update. This call is asynchronous and performed in a separate thread.
+     * @param update 
+     */
     public void publish(final SensorPub update) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                try {
                 client.publishNew(update);
-//                } catch (SerializationException ex) {
-//                    Logger.getLogger(SenseService.class.getName()).log(Level.SEVERE, null, ex);
-//                }
             }
         }).start();
     }

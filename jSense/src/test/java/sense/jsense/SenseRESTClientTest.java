@@ -119,9 +119,18 @@ public class SenseRESTClientTest {
         
         List<SensorPub> searchResult = client.search("value:9000 AND name:home");
         assertTrue(searchResult.size() >= 1);
+        System.out.println("Search: value:9000 AND name:home ---> success!");
+        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SenseRESTClientTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         Date now = new Date();
         List<SensorPub> sr2 = client.search("updatedAt:>" + now.getTime());
+        System.out.println("Now: " + now.getTime());
         assertTrue(sr2.isEmpty());
+        System.out.println("Search: updatedAt:>" + now.getTime() + " -----> Success!");
     }
 }
