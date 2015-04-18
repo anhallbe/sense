@@ -52,8 +52,8 @@ public class SenseRESTClient {
     
     /**
      * Get a sensor update with the given ID. Returns null if no sensor is found.
-     * @param id
-     * @return 
+     * @param id - The id of a sensor.
+     * @return A sensor that is linked to the id. Or null
      */
     public SensorPub get(String id) {
         SensorPub result;
@@ -79,8 +79,8 @@ public class SenseRESTClient {
     /**
      * Publish a new sensor update. This method should only be used to create
      * new records. If you want to update an existing resource use publishUpdate.
-     * @param sp
-     * @return 
+     * @param sp The new sensor update.
+     * @return id of the new sensor, or null in case of failure.
      */
     public String publishNew(SensorPub sp) {
         String id = null;
@@ -103,9 +103,9 @@ public class SenseRESTClient {
     
     /**
      * Update the value of an existing sensor.
-     * @param value
-     * @param id
-     * @return 
+     * @param value The new value. Make sure it is the correct TYPE (Integer, Boolean etc..)
+     * @param id ID of the sensor to update.
+     * @return true if the value was successfully updated. false in case of error.
      */
     public boolean publishUpdate(Object value, String id) {
         int rCode = 0;
@@ -124,10 +124,10 @@ public class SenseRESTClient {
     }
     
     /**
-     * Perform a search for a set of sensors. Example: search("name:NameOfSensor AND value:>20").
+     * Perform a search for a set of sensors. Example: search("name:NameOfSensor AND value:20").
      * Returns a list of results, or empty list if no results were found.
-     * @param query
-     * @return 
+     * @param query Use Lucene syntax.
+     * @return A list of search results, not sorted.
      */
     public List<SensorPub> search(String query) {
         List<SensorPub> result = new ArrayList<>();
