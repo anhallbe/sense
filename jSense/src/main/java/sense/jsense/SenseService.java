@@ -78,16 +78,23 @@ public class SenseService implements Runnable {
     }
     
     /**
-     * Publish a sensor update. This call is asynchronous and performed in a separate thread.
+     * Publish a new sensor.
      * @param update 
+     * @return The id of the sensor
      */
-    public void publish(final SensorPub update) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                client.publishNew(update);
-            }
-        }).start();
+    public String publish(final SensorPub update) {
+        String id = client.publishNew(update);
+        return id;
+    }
+    
+    /**
+     * Publish an update of an existing sensor. This should be faster than 
+     * publish/1 and require less network resources.
+     * @param id id of the sensor, given by publish/1
+     * @param newValue New value
+     */
+    public void publish(final String id, final Object newValue) {
+        client.publishUpdate(newValue, id);
     }
 
     @Override
