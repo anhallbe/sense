@@ -30,7 +30,7 @@ public class SenseRESTClientTest {
     
     @BeforeClass
     public static void setUpClass() {
-        client = new SenseRESTClient();
+        client = new SenseRESTClient("192.168.1.17", 1337);
     }
     
     @AfterClass
