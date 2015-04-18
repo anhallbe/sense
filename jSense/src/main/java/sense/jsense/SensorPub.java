@@ -1,9 +1,6 @@
 
 package sense.jsense;
 
-import java.io.IOException;
-import org.elasticsearch.common.xcontent.XContentFactory;
-
 public abstract class SensorPub {
     private String name;
     private String description;
@@ -48,23 +45,6 @@ public abstract class SensorPub {
             default: 
                 this.value = value;
         }
-    }
-    
-    public String toJSON() throws SerializationException {
-        String json;
-        try {
-            json = XContentFactory.jsonBuilder()
-                    .startObject()
-                    .field(FIELD_NAME, getName())
-                    .field(FIELD_DESCRIPTION, getDescription())
-                    .field(FIELD_VALUE_TYPE, getValueType())
-                    .field(FIELD_VALUE, getValue())
-                    .endObject()
-                    .string();
-        } catch (IOException ex) {
-            throw new SerializationException("Could not serialize SensorPub " + name + " to JSON");
-        }
-        return json;
     }
 
     public String getName() {
