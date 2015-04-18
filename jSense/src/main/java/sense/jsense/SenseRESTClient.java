@@ -36,7 +36,7 @@ public class SenseRESTClient {
      * @param host
      * @param port 
      */
-    protected SenseRESTClient(String host, int port) {
+    public SenseRESTClient(String host, int port) {
         this.host = host;
         this.port = port;
         
@@ -46,7 +46,7 @@ public class SenseRESTClient {
     /**
      * Use the default HOST and PORT. I.e http://localhost:1337/
      */
-    protected SenseRESTClient() {
+    public SenseRESTClient() {
         this(HOST_DEFAULT, PORT_DEFAULT);
     }
     
@@ -55,7 +55,7 @@ public class SenseRESTClient {
      * @param id
      * @return 
      */
-    protected SensorPub get(String id) {
+    public SensorPub get(String id) {
         SensorPub result;
         try {
             HttpResponse<JsonNode> response = Unirest.get(sensorURL + "/" + id)
@@ -82,7 +82,7 @@ public class SenseRESTClient {
      * @param sp
      * @return 
      */
-    protected String publishNew(SensorPub sp) {
+    public String publishNew(SensorPub sp) {
         String id = null;
         try {
             HttpResponse<JsonNode> response = Unirest.post(sensorURL)
@@ -107,7 +107,7 @@ public class SenseRESTClient {
      * @param id
      * @return 
      */
-    protected boolean publishUpdate(Object value, String id) {
+    public boolean publishUpdate(Object value, String id) {
         int rCode = 0;
         try {
             System.out.println("Making request to " + sensorURL + "/" + id);
@@ -129,7 +129,7 @@ public class SenseRESTClient {
      * @param query
      * @return 
      */
-    protected List<SensorPub> search(String query) {
+    public List<SensorPub> search(String query) {
         List<SensorPub> result = new ArrayList<>();
         try {
             HttpResponse<JsonNode> response = Unirest.get(sensorURL + "/search")
