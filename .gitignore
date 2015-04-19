@@ -30,5 +30,3 @@ node_modules
 .vagrant/
 /ExamplePublisher/target/
 /ExampleSubscriber/target/
-/SenseServiceConsumer/nbproject/private/
-/SenseServiceConsumer/build/
