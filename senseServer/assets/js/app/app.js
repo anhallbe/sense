@@ -1,9 +1,11 @@
 var app = angular.module('main', []);
 
-app.controller('mainController', ['$scope', '$log', function($scope, $log) {
+app.controller('mainController', ['$scope', '$log', '$interval', function($scope, $log, $interval) {
   $scope.sensors = [];
 
   $scope.search = function() {
+    if(!$scope.query)
+      $scope.query = "*";
     $log.info("search " + $scope.query);
     io.socket.get('/sensor/search?q=' + $scope.query, function(resData, jwres) {
       $scope.sensors = [];
@@ -31,7 +33,7 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
     }
   });
 
-  io.socket.get('/sensor', function(resData, jwres) {
+  /*io.socket.get('/sensor', function(resData, jwres) {
     $log.info(resData);
     for(var r in resData) {
       $scope.sensors.push({
@@ -43,5 +45,9 @@ app.controller('mainController', ['$scope', '$log', function($scope, $log) {
         time:resData[r]._source.updatedAt});
     }
     $scope.$apply();
-  });
+  });*/
+
+  //Update search results every 5 seconds...
+  $scope.search();
+  $interval($scope.search, 5000);
 }]);

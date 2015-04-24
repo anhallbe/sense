@@ -25,7 +25,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="sensor in sensors">
+      <tr ng-repeat="sensor in sensors | orderBy: '-time'">
         <td>{{sensor.name}}</td>
         <td>{{sensor.description}}</td>
         <td>{{sensor.value}} ({{sensor.valueType}})</td>
@@ -35,7 +35,7 @@
     </tbody>
   </table>
 
-  <form class="fixed center form-inline" ng-submit="addSensor()">
+  <!--<form class="fixed center form-inline" ng-submit="addSensor()">
     <div class="form-group">
       <div class="input-group">
         <label>Create new sensor</label>
@@ -46,7 +46,7 @@
       </div>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
-  </form>
+  </form>-->
 </div>
 
 <style>
