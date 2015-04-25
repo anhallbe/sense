@@ -1,5 +1,5 @@
 
-package sense.jsense;
+package sense.jsense.util;
 
 public abstract class SensorPub {
     private String name;

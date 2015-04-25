@@ -5,6 +5,8 @@
  */
 package sense.jsense;
 
+import sense.jsense.util.UpdateListener;
+import sense.jsense.util.SensorPub;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

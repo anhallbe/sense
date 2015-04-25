@@ -5,7 +5,7 @@
  */
 package sense.jsense.sensors;
 
-import sense.jsense.SensorPub;
+import sense.jsense.util.SensorPub;
 
 /**
  *

@@ -5,6 +5,7 @@
  */
 package sense.jsense;
 
+import sense.jsense.util.SensorPub;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -138,7 +139,7 @@ public class SenseRESTClient {
                     .asJson();
             
             if(response.getBody().isArray()) {
-                System.out.println("Response body is array.");
+                //System.out.println("Response body is array.");
                 JSONArray resultArray = response.getBody().getArray();
                 for(int i=0; i<resultArray.length(); i++) {
                     JSONObject jsonResult = resultArray.getJSONObject(i).getJSONObject("_source");
