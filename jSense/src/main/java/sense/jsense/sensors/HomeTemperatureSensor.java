@@ -5,6 +5,7 @@
  */
 package sense.jsense.sensors;
 
+import java.util.Date;
 import sense.jsense.util.SensorPub;
 
 /**
@@ -17,7 +18,8 @@ public class HomeTemperatureSensor extends SensorPub {
         super("home temperature", 
                 "Used to measure the temperature of my home in Kista", 
                 SensorPub.TYPE_INTEGER, 
-                value);
+                value,
+                new Date());
     }
     
 }

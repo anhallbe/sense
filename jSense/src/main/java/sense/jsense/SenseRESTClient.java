@@ -10,7 +10,11 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,12 +68,21 @@ public class SenseRESTClient {
                     .asJson();
             JSONObject ro = response.getBody().getObject().getJSONObject("_source");
             
+            String dateString = ro.getString(SensorPub.FIELD_TIME);
+            DateFormat dformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            Date time = dformat.parse(dateString);
+            
             result = new SensorPub(
                     ro.getString(SensorPub.FIELD_NAME), 
                     ro.getString(SensorPub.FIELD_DESCRIPTION), 
                     ro.getString(SensorPub.FIELD_VALUE_TYPE), 
-                    ro.get(SensorPub.FIELD_VALUE)){};
+                    ro.get(SensorPub.FIELD_VALUE),
+                    time){};
         } catch (UnirestException ex) {
+            Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
+            result = null;
+        } catch (ParseException ex) {
+            System.err.println("Error parsing updatedAt in GET");
             Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
             result = null;
         }
@@ -148,12 +161,20 @@ public class SenseRESTClient {
                     String description = jsonResult.getString(SensorPub.FIELD_DESCRIPTION);
                     String valueType = jsonResult.getString(SensorPub.FIELD_VALUE_TYPE);
                     Object value = jsonResult.get(SensorPub.FIELD_VALUE);
-                    result.add(new SensorPub(name, description, valueType, value) {});
+                    
+                    String dateString = jsonResult.getString(SensorPub.FIELD_TIME);
+                    DateFormat dformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                    Date time = dformat.parse(dateString);
+                    
+                    result.add(new SensorPub(name, description, valueType, value, time) {});
                 }
             }
             else
                 System.out.println("Response NOT array");
         } catch (UnirestException ex) {
+            Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            System.err.println("Error parsing updatedAt....");
             Logger.getLogger(SenseRESTClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         

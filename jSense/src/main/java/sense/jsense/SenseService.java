@@ -5,6 +5,8 @@
  */
 package sense.jsense;
 
+import java.util.Collections;
+import java.util.Comparator;
 import sense.jsense.util.UpdateListener;
 import sense.jsense.util.SensorPub;
 import java.util.Date;
@@ -101,9 +103,9 @@ public class SenseService implements Runnable {
 
     @Override
     public void run() {
+        lastPollDate = new Date();
         while(running) {
             try {
-                lastPollDate = new Date();
                 Thread.sleep(pollInterval);
                 if(!running)
                     break;
@@ -112,8 +114,20 @@ public class SenseService implements Runnable {
                     String queryWithTimestamp = query + " AND updatedAt:>" + lastPollDate.getTime();  //Only interested in recent updates.
                     List<SensorPub> result = client.search(queryWithTimestamp);
                     
+                    
+                    //SORT
+                    Collections.sort(result, new Comparator<SensorPub>() {
+                        @Override
+                        public int compare(SensorPub o1, SensorPub o2) {
+                            return o1.getTime().compareTo(o2.getTime());
+                        }
+                    });
+                    //END SORT
+                    
+                    
                     for(SensorPub res : result) {
                         queries.get(query).onUpdate(res);
+                        lastPollDate = res.getTime();
                     }
                 }
             } catch (InterruptedException ex) {

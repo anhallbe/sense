@@ -1,11 +1,14 @@
 
 package sense.jsense.util;
 
+import java.util.Date;
+
 public abstract class SensorPub {
     private String name;
     private String description;
     private String valueType;
     private Object value;
+    private Date time;
     
     public static final String TYPE_STRING = "string";
     public static final String TYPE_DOUBLE = "double";
@@ -17,11 +20,13 @@ public abstract class SensorPub {
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_VALUE_TYPE = "valueType";
     public static final String FIELD_VALUE = "value";
+    public static final String FIELD_TIME = "updatedAt";
 
-    public SensorPub(String name, String description, String valueType, Object value) {
+    public SensorPub(String name, String description, String valueType, Object value, Date time) {
         this.name = name;
         this.description = description;
         this.valueType = valueType;
+        this.time = time;
         
         switch(valueType) {
             case TYPE_INTEGER:
@@ -85,5 +90,9 @@ public abstract class SensorPub {
                 +"description: '" + getDescription() + "', "
                 +"valueType: '" + getValueType() + "', "
                 +"value: '" + getValue() + "'}";
+    }
+    
+    public Date getTime() {
+        return time;
     }
 }

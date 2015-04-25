@@ -122,15 +122,15 @@ public class SenseRESTClientTest {
         List<SensorPub> searchResult = client.search("value:9000 AND name:home");
         assertTrue(searchResult.size() >= 1);
         System.out.println("Search: value:9000 AND name:home ---> success!");
-        
-        /*try {
-            Thread.sleep(1000);
+        /*
+        try {
+            Thread.sleep(2000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SenseRESTClientTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         Date now = new Date();
-        List<SensorPub> sr2 = client.search("updatedAt:>" + now.getTime());
+        List<SensorPub> sr2 = client.search("value:9000 AND name:home AND updatedAt:>" + now.getTime());
         System.out.println("Now: " + now.getTime());
         assertTrue(sr2.isEmpty());
         System.out.println("Search: updatedAt:>" + now.getTime() + " -----> Success!");*/
@@ -139,7 +139,7 @@ public class SenseRESTClientTest {
     @Test
     public void testLocation() throws InterruptedException {
         GeoLoc loc = new GeoLoc("59.40326295,17.94443479");
-        SensorPub locPub = new SensorPub("TestLocation", "just testing GeoLoc", SensorPub.TYPE_GEOLOC, loc) {};
+        SensorPub locPub = new SensorPub("TestLocation", "just testing GeoLoc", SensorPub.TYPE_GEOLOC, loc, new Date()) {};
         String id = client.publishNew(locPub);
         
         Thread.sleep(1000);
