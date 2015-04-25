@@ -9,8 +9,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sense.jsense.SenseService;
-import sense.jsense.SensorPub;
-import sense.jsense.UpdateListener;
+import sense.jsense.util.SensorPub;
+import sense.jsense.util.UpdateListener;
 
 /**
  *
@@ -20,7 +20,7 @@ public class ExampleSubscriber {
     private SenseService service;
     
     public ExampleSubscriber() {
-        service = new SenseService("localhost", 1337, SenseService.INTERVAL_SLOW, true);
+        service = new SenseService("ec2.hallnet.eu", 1337, SenseService.INTERVAL_SLOW, true);
         
 //        service.start();
         service.subscribe("name:ExampleSensor", new UpdateListener() {

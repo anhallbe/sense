@@ -5,10 +5,11 @@
  */
 package org.sample.examplepublisher;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import sense.jsense.SenseService;
-import sense.jsense.SensorPub;
+import sense.jsense.util.SensorPub;
 
 /**
  *
@@ -27,7 +28,7 @@ public class ExamplePublisher {
 //                throw new UnsupportedOperationException("onUpdate is not implemented");
 //            }
 //        };
-        service = new SenseService("localhost", 1337, SenseService.INTERVAL_FAST, false);
+        service = new SenseService("ec2.hallnet.eu", 1337, SenseService.INTERVAL_FAST, false);
         
         service.start();
         System.out.println("Publishing..");
@@ -47,7 +48,8 @@ public class ExamplePublisher {
             super("ExampleSensor", 
                     "Just a sensor used to test the PubSub service.", 
                     SensorPub.TYPE_INTEGER, 
-                    value);
+                    value,
+                    new Date());
         }
     }
     
