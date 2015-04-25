@@ -40,7 +40,7 @@ public abstract class SensorPub {
                 this.value = (Double) value;
                 break;
             case TYPE_GEOLOC:
-                this.value = (String) value;
+                this.value = value.toString();
                 break;
             default: 
                 this.value = value;

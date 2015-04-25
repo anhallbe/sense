@@ -30,7 +30,7 @@ public class SenseRESTClientTest {
     
     @BeforeClass
     public static void setUpClass() {
-        client = new SenseRESTClient("192.168.1.17", 1337);
+        client = new SenseRESTClient("ec2.hallnet.eu", 1337);
     }
     
     @AfterClass
@@ -121,7 +121,7 @@ public class SenseRESTClientTest {
         assertTrue(searchResult.size() >= 1);
         System.out.println("Search: value:9000 AND name:home ---> success!");
         
-        try {
+        /*try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(SenseRESTClientTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,6 +131,28 @@ public class SenseRESTClientTest {
         List<SensorPub> sr2 = client.search("updatedAt:>" + now.getTime());
         System.out.println("Now: " + now.getTime());
         assertTrue(sr2.isEmpty());
-        System.out.println("Search: updatedAt:>" + now.getTime() + " -----> Success!");
+        System.out.println("Search: updatedAt:>" + now.getTime() + " -----> Success!");*/
+    }
+    
+    @Test
+    public void testLocation() throws InterruptedException {
+        GeoLoc loc = new GeoLoc("59.40326295,17.94443479");
+        SensorPub locPub = new SensorPub("TestLocation", "just testing GeoLoc", SensorPub.TYPE_GEOLOC, loc) {};
+        String id = client.publishNew(locPub);
+        
+        Thread.sleep(1000);
+        
+        SensorPub res = client.get(id);
+        
+        assertEquals(res.getName(), locPub.getName());
+        assertEquals(res.getDescription(), locPub.getDescription());
+        assertEquals(res.getValueType(), locPub.getValueType());
+        assertEquals(res.getValue(), locPub.getValue());
+        
+        GeoLoc resLoc = new GeoLoc((String) res.getValue());
+        
+        assertEquals(resLoc, loc);
+        
+        assertEquals(resLoc.distanceTo(loc), 0.0, 0.1);
     }
 }
