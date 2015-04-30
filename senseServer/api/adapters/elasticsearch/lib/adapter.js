@@ -188,7 +188,7 @@ module.exports = (function () {
      *
      */
     find: function (connection, collection, options, cb) {
-      console.log('______________');
+      /*console.log('______________');
       console.log('find');
       console.log('connection:');
       console.log(connection);
@@ -197,7 +197,7 @@ module.exports = (function () {
       console.log(collection);
       console.log('_________________________________________________________');
       console.log('where');
-      console.log(JSON.stringify(options.where));
+      console.log(JSON.stringify(options.where));*/
 
       var query;
       if(options.where)
@@ -217,7 +217,7 @@ module.exports = (function () {
     },
 
     create: function (connection, collection, values, cb) {
-      console.log('______________');
+      /*console.log('______________');
       console.log('create');
       console.log('connection:');
       console.log(connection);
@@ -226,7 +226,7 @@ module.exports = (function () {
       console.log(collection);
       console.log('_________________________________________________________');
       console.log('values');
-      console.log(values);
+      console.log(values);*/
       ESConnection.create({
         index:'sense',
         type: collection,
@@ -239,7 +239,7 @@ module.exports = (function () {
     },
 
     update: function (connection, collection, options, values, cb) {
-      console.log('______update_______');
+      /*console.log('______update_______');
       console.log('connection:');
       console.log(connection);
       console.log('collection:');
@@ -249,7 +249,7 @@ module.exports = (function () {
       console.log('id:');
       console.log(options.where._id);
       console.log('values');
-      console.log(values);
+      console.log(values);*/
       ESConnection.update({
         index:'sense',
         type: collection,
@@ -279,10 +279,10 @@ module.exports = (function () {
     },
 
     search: function(connection, collection, query, cb) {
-      console.log("SEARCH CALLED");
+      /*console.log("SEARCH CALLED");
       console.log(collection);
       console.log(query);
-      console.log(JSON.stringify(query));
+      console.log(JSON.stringify(query));*/
 
       ESConnection.search({
         index: 'sense',
