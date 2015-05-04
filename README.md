@@ -29,6 +29,22 @@ A Java client library that lets the user send/receive sensor data in a decoupled
       100);                       //It's hot in herre
   service.publish(update);
 ```
+It is also possible to publish sensor data through the REST API (which could be useful for non-java devices and applications). Example:
+```javascript
+   //POST a new sensor to examplehost.io/sensor:
+   {
+      name:'WifiSSID', 
+      description:'The current SSID that my phone is connected to.', 
+      valueType:'string', 
+      value:'my_home_wifi'
+   }
+   
+   //Update an existing sensor with a HTTP PUT:
+   {
+      value: 'my_work_wifi',
+      id: 123456
+   }
+```
 
 
 ##Sense Server
